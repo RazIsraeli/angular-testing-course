@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { CoursesService } from './courses.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { COURSES } from '../../../../server/db-data';
+import { partial } from 'cypress/types/lodash';
+import { Course } from '../model/course';
 
 describe('CoursesService', () => {
 
@@ -23,7 +25,7 @@ describe('CoursesService', () => {
   });
 
   afterEach(() => {
-    httpTestingController.verify(); // ensures that only the api call that we mentioned in the test was executed.
+    httpTestingController.verify();
   })
 
   it('should retrieve all courses', () => {
@@ -58,5 +60,26 @@ describe('CoursesService', () => {
     expect(req.request.method).toEqual("GET");
 
     req.flush(COURSES[12]);
+  });
+
+  it('should save course data', () => {
+    const changes: Partial<Course> = { titles: { description: 'Testing Course' } }; // The part of the course object that we want to changes (only the description of an existing course)
+
+    coursesService.saveCourse(12, changes) //passing the changes to be made to course with ID 12.
+      .subscribe((course) => {
+
+        expect(course.titles.description).toBe('Testing Course');
+        expect(course.id).toBe(12);
+      });
+
+    const req = httpTestingController.expectOne('/api/courses/12'); // validate that the http request was sent to the correct path.
+    expect(req.request.method).toEqual("PUT");
+    expect(req.request.body.titles.description).toEqual(changes.titles.description);
+
+    //! The object that we want to send as a mock response when the http request is sent to the relevant path.
+    req.flush({
+      ...COURSES[12],
+      ...changes
+    })
   });
 });
