@@ -49,3 +49,19 @@ expect(req.request.method).toEqual("GET");
 req.flush({
       payload: Object.values(COURSES) // test data from a static file on this project (see imports above)
     })
+
+## Examples of testing http requests with search query params
+
+### 1 - won't work.
+const req = httpTestingController.expectOne('/api/lessons');
+
+### 2 - would work.
+const req = httpTestingController.expectOne(req => req.url === '/api/lessons');
+
+### 3 - validation of the params.
+ expect(req.request.method).toEqual("GET");
+expect(req.request.params.get("courseId")).toEqual("12"); // params are being passed as strings, so we expect the value to be a string and not a number.
+expect(req.request.params.get("filter")).toEqual("");
+expect(req.request.params.get("sortOrder")).toEqual("asc");
+expect(req.request.params.get("pageNumber")).toEqual("0");
+expect(req.request.params.get("pageSize")).toEqual("3");
