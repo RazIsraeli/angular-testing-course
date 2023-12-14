@@ -9,7 +9,6 @@ Usually we would want to test 1 specific functionality of the service in each te
 For example:
 const result = calculator.add(2,2)
 
-
 # 3. Finally we would run assertions that either pass or fail the test.
 For example:
 
