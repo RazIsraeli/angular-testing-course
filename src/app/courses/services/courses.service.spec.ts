@@ -22,6 +22,10 @@ describe('CoursesService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
+  afterEach(() => {
+    httpTestingController.verify(); // ensures that only the api call that we mentioned in the test was executed.
+  })
+
   it('should retrieve all courses', () => {
     coursesService.findAllCourses()
       .subscribe((courses) => {
@@ -55,9 +59,4 @@ describe('CoursesService', () => {
 
     req.flush(COURSES[12]);
   });
-
-
-  afterEach(() => {
-    httpTestingController.verify(); // ensures that only the api call that we mentioned in the test was executed.
-  })
 });
