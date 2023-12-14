@@ -1,14 +1,23 @@
 import { CalculatorService } from './calculator.service';
+import { TestBed } from '@angular/core/testing';
+import { LoggerService } from './logger.service';
 
 describe('CalculatorService', () => {
 
-  //! we can't define the variables inside the "beforeEach" scope since then the "it" blocks will not be able to use them, so they are created here.
   let calculator: CalculatorService;
-  let loggerSpy: any; //This is of type any since this is a jasmine spy and NOT AN INSTANCE OF THE LOGGER SERVICE.
+  let loggerSpy: any;
 
   beforeEach(() => {
     loggerSpy = jasmine.createSpyObj('LoggerService', ['log']);
-    calculator = new CalculatorService(loggerSpy);
+
+    TestBed.configureTestingModule({
+      providers: [
+        CalculatorService, // we provide CalculatorService as an instance to the testing module. This will use a real instance of the service.
+        { provide: LoggerService, useValue: loggerSpy } // we provide a custom provider by the name LoggerService, and whenever it is used we want loggerSpy to replace it. This does not create a real instance of the service.
+      ]
+    })
+
+    calculator = TestBed.inject(CalculatorService);
   });
 
   it('should add two numbers', () => {
