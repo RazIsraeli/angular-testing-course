@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { CoursesService } from './courses.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { COURSES } from '../../../../server/db-data';
-import { partial } from 'cypress/types/lodash';
 import { Course } from '../model/course';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CoursesService', () => {
 
@@ -63,23 +63,37 @@ describe('CoursesService', () => {
   });
 
   it('should save course data', () => {
-    const changes: Partial<Course> = { titles: { description: 'Testing Course' } }; // The part of the course object that we want to changes (only the description of an existing course)
+    const changes: Partial<Course> = { titles: { description: 'Testing Course' } };
 
-    coursesService.saveCourse(12, changes) //passing the changes to be made to course with ID 12.
+    coursesService.saveCourse(12, changes)
       .subscribe((course) => {
 
         expect(course.titles.description).toBe('Testing Course');
         expect(course.id).toBe(12);
       });
 
-    const req = httpTestingController.expectOne('/api/courses/12'); // validate that the http request was sent to the correct path.
+    const req = httpTestingController.expectOne('/api/courses/12');
     expect(req.request.method).toEqual("PUT");
     expect(req.request.body.titles.description).toEqual(changes.titles.description);
 
-    //! The object that we want to send as a mock response when the http request is sent to the relevant path.
     req.flush({
       ...COURSES[12],
       ...changes
     })
+  });
+
+  it('should give an error if save course fails', () => {
+    const changes: Partial<Course> = { titles: { description: 'Testing Course' } };
+
+    coursesService.saveCourse(12, changes)
+      .subscribe(
+        () => fail('the save course operation should have failed'), // next operation on an observable.
+        (error: HttpErrorResponse) => expect(error.status).toBe(500) // error callback on an observable.
+      );
+
+    const req = httpTestingController.expectOne('/api/courses/12');
+    expect(req.request.method).toEqual("PUT");
+
+    req.flush('Save course failed', { status: 500, statusText: 'Internal Server Error' }); // we want to mock an error message coming from the http response for the service save method.
   });
 });
