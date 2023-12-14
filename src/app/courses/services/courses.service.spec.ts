@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CoursesService } from './courses.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { COURSES } from '../../../../server/db-data';
+import { COURSES, LESSONS, findLessonsForCourse } from '../../../../server/db-data';
 import { Course } from '../model/course';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -95,5 +95,28 @@ describe('CoursesService', () => {
     expect(req.request.method).toEqual("PUT");
 
     req.flush('Save course failed', { status: 500, statusText: 'Internal Server Error' }); // we want to mock an error message coming from the http response for the service save method.
+  });
+
+  it('should find a list of lessons', () => {
+    coursesService.findLessons(12)
+      .subscribe((lessons) => {
+
+        expect(lessons).toBeTruthy();
+        expect(lessons.length).toBe(3);
+      });
+
+    // const req = httpTestingController.expectOne('/api/lessons'); //! This won't work since this request is sent with search query params, which will fail the url match (/api/lessons?CourseId=12&filer=""&PageSize=3;)...
+    const req = httpTestingController.expectOne(req => req.url === '/api/lessons'); // We would use a callback function that compares the given url to what we expect it to be, without the part of the search query params.
+
+    expect(req.request.method).toEqual("GET");
+    expect(req.request.params.get("courseId")).toEqual("12"); // params are being passed as strings, so we expect the value to be a string and not a number.
+    expect(req.request.params.get("filter")).toEqual("");
+    expect(req.request.params.get("sortOrder")).toEqual("asc");
+    expect(req.request.params.get("pageNumber")).toEqual("0");
+    expect(req.request.params.get("pageSize")).toEqual("3");
+
+    req.flush({
+      payload: findLessonsForCourse(12).slice(0, 3)
+    })
   });
 });
