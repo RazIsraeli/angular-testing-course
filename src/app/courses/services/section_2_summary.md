@@ -1,6 +1,6 @@
-## Angular Unit Testing of services that use httpClient
+# Angular Unit Testing of services that use httpClient
 
-# HttpTestingController
+## HttpTestingController
 The purpose of Angular's HttpTestingController is to mock and test HTTP requests in your Angular unit tests. It lets you control the responses and interactions with your application's HTTP calls without actually making real requests to any external API. This makes your tests faster, more reliable, and easier to maintain.
 
 
@@ -18,11 +18,11 @@ Here are some key things to know about HttpTestingController:
 
 ## In order to use HttpTestingController:
 
-# create a variable in the test description block:
+### create a variable in the test description block:
 
 let httpTestingController: HttpTestingController
 
-# add the module to the TestBed configurations imports:
+### add the module to the TestBed configurations imports:
 
 TestBed.configureTestingModule({
       imports: [
@@ -33,7 +33,7 @@ TestBed.configureTestingModule({
       ]
     });
 
-# inject the service using the TestBed:
+### inject the service using the TestBed:
 
 httpTestingController = TestBed.inject(HttpTestingController); // needed to work with the mock of httpClient.
 
