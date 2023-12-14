@@ -12,8 +12,8 @@ describe('CalculatorService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        CalculatorService, // we provide CalculatorService as an instance to the testing module. This will use a real instance of the service.
-        { provide: LoggerService, useValue: loggerSpy } // we provide a custom provider by the name LoggerService, and whenever it is used we want loggerSpy to replace it. This does not create a real instance of the service.
+        CalculatorService,
+        { provide: LoggerService, useValue: loggerSpy }
       ]
     })
 
