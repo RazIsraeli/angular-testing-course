@@ -14,7 +14,7 @@ describe('CoursesCardListComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoursesModule // This is going to bring the courseCardList component together with all the needed angular materials that this module needs to display the data.
+        CoursesModule,
       ]
     });
   });
