@@ -25,33 +25,3 @@ describe('CoursesCardListComponent', () => {
   });
 
 });
-
-
-
-describe('CoursesCardListComponent', () => {
-
-
-  it("should create the component", () => {
-
-    pending();
-
-  });
-
-
-  it("should display the course list", () => {
-
-    pending();
-
-  });
-
-
-  it("should display the first course", () => {
-
-    pending();
-
-  });
-
-
-});
-
-
