@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CoursesCardListComponent } from './courses-card-list.component';
 import { CoursesModule } from '../courses.module';
 import { COURSES } from '../../../../server/db-data';
@@ -13,7 +13,7 @@ describe('CoursesCardListComponent', () => {
 
   let component: CoursesCardListComponent;
   let fixture: ComponentFixture<CoursesCardListComponent>;
-  let el: DebugElement; // Needed to query the DOM.
+  let el: DebugElement;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -35,13 +35,13 @@ describe('CoursesCardListComponent', () => {
   });
 
   it('should display the course list', () => {
-    component.courses = setupCourses(); // a utility function that returns mock data that was prepared in advance.
-    // What we do here is to populate the variable "courses" that exists in the component.ts file with mock data, so we can test the component on the DOM.
+    component.courses = setupCourses(); //! After any change is done to the component's data, and we expect the DOM to display the new data - WE MUST ASK FOR CHANGE DETECTION!
+    fixture.detectChanges();
 
-    const cards = el.queryAll(By.css('.course-card')); //querying the DOM for all the elements with the class "course-card".
+    const cards = el.queryAll(By.css('.course-card'));
 
     expect(cards).toBeTruthy('No cards were found');
-    expect(cards.length).toBe(12, 'Unexpected number of courses.'); //! This test fails as of the moment of commiting it. In the next commit it will be fixed together with the ability to debug a test.
+    expect(cards.length).toBe(12, 'Unexpected number of courses.');
   });
 
 });
