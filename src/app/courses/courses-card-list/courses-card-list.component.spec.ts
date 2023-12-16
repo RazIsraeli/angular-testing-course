@@ -12,25 +12,36 @@ import { AppComponent } from '../../app.component';
 describe('CoursesCardListComponent', () => {
 
   let component: CoursesCardListComponent;
-  let fixture: ComponentFixture<CoursesCardListComponent>; // needed in order to create an instance of a component.
+  let fixture: ComponentFixture<CoursesCardListComponent>;
+  let el: DebugElement; // Needed to query the DOM.
 
-
-  beforeEach(waitForAsync(() => { // WaitForAsync is angular's test utility function that receives another function. It know that there are async processes in the provided function, and it waits for them to end before moving on to the next specification.
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         CoursesModule,
       ]
     })
       .compileComponents()
-      .then(() => { // In this block we will setup the test, meaning, we will populate the global variables that were declared inside the "describe" block.
-        fixture = TestBed.createComponent(CoursesCardListComponent); //
-        component = fixture.componentInstance; // Creating an instance of the component we want to test.
+      .then(() => {
+        fixture = TestBed.createComponent(CoursesCardListComponent);
+        component = fixture.componentInstance;
+        el = fixture.debugElement;
       });
   }));
 
 
   it('should create the component', () => {
     expect(component).toBeTruthy('No component was created');
+  });
+
+  it('should display the course list', () => {
+    component.courses = setupCourses(); // a utility function that returns mock data that was prepared in advance.
+    // What we do here is to populate the variable "courses" that exists in the component.ts file with mock data, so we can test the component on the DOM.
+
+    const cards = el.queryAll(By.css('.course-card')); //querying the DOM for all the elements with the class "course-card".
+
+    expect(cards).toBeTruthy('No cards were found');
+    expect(cards.length).toBe(12, 'Unexpected number of courses.'); //! This test fails as of the moment of commiting it. In the next commit it will be fixed together with the ability to debug a test.
   });
 
 });

@@ -36,6 +36,12 @@ When we want to run async code in the "beforeEach" block, and make sure the spec
   1. This has nothing to do with the js "async-await" language feature. This is angular's test utility function. No need to use "await" when using async/waitForAsync this way.
   2. waitForAsync waits for all async processes inside the block to end for a predefined amount of time (by default 5 secs).
 
+### Querying the DOM
+In order to query the DOM, we need to add another variable to the test suite - "DebugElement", as follows:
+
+ let el: DebugElement; // Needed to query the DOM.
+ el.queryAll(By.css('.course-card')); //querying the DOM for all the elements with the class "course-card".
+
 ### Important Info
 * .compileComponents()
 Returns a resolved promise once the compilation process of the components is finished.
