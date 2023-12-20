@@ -93,6 +93,52 @@ In summary, ComponentFixture provides the overall context and control for testin
   Container components, or smart components usually receive their data from a service.
   Dumb components usually display the data they receive from a container component as inputs.
 
+### Mocking Services
+One of the most important things is to know how to mock a service.
+We usually do not want to test the service while testing the component, but to test each one of them separately.
+Since there are many cases where a component depends on a service, we would need to be able to mock the service and control the data it is sending back to the component.
+
+## Example of mocking a service
+
+1. We create a variable that will be used later on to server as the service we are going to mock
+  - In the describe block:
+ 
+ let coursesService: any;
+
+2. We create a jasmine Spy that wil hijack the calls to the service, and will replace them with our own data.
+ - In the beforeEach block:
+
+const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']);
+
+3. We configure the TestBed with everything we need, especially with the spy that will hijack our service.
+ - In the beforeEach block:
+
+  TestBed.configureTestingModule({
+      imports: [
+        CoursesModule,
+        NoopAnimationsModule
+      ],
+      providers: [
+        { provide: CoursesService, useValue: coursesServiceSpy } -> The service we will mock, and the spy that will replace it.
+      ]
+    }).compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(HomeComponent);
+        component = fixture.componentInstance;
+        el = fixture.debugElement;
+        coursesService = TestBed.inject(CoursesService); -> Injecting the mock service.
+      })
+
+4. Inside the specification blocks, we can now use the service and it will be mocked with the data we want to use.
+  - Inisde it blocks:
+
+  it('should display only beginner courses', () => {
+    coursesService.findAllCourses.and.returnValue(of(beginnerCourses)); -> and.returnValue() is coming from jasmine, since we are using a spy here. We control the data that is sent back.
+    fixture.detectChanges();
+    const tabs = el.queryAll(By.css('.mdc-tab'));
+    const title = tabs[0].nativeElement.textContent;
 
 
-## Examples
+    expect(tabs.length).toBe(1, 'Unexpected number of tabs found');
+    expect(title).toBe('Beginners', 'Could not read title "Beginners"');
+  });
