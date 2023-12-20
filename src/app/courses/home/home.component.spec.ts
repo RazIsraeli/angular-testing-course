@@ -78,7 +78,6 @@ describe('HomeComponent', () => {
 
 
   it('should display both tabs', () => {
-    // const courses = beginnerCourses.concat(advancedCourses); //the below solution looks better:
     const courses = setupCourses();
     coursesService.findAllCourses.and.returnValue(of(courses));
     fixture.detectChanges();
@@ -87,16 +86,26 @@ describe('HomeComponent', () => {
     const beginnersTab = tabs.find(tab => tab.nativeElement.textContent === 'Beginners');
     const advancedTab = tabs.find(tab => tab.nativeElement.textContent === 'Advanced');
 
-    expect(tabs.length).toBe(2,'Unexpected number of tabs found')
+    expect(tabs.length).toBe(2, 'Unexpected number of tabs found')
     expect(beginnersTab.nativeElement.textContent).toBe('Beginners', 'Could not find beginners tab');
     expect(advancedTab.nativeElement.textContent).toBe('Advanced', 'Could not find advanced tab');
   });
 
 
-  it("should display advanced courses when tab clicked", () => {
+  it('should display advanced courses when tab clicked', () => {
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()));
+    fixture.detectChanges(); // At this point we have the courses loaded to the home component.
 
-    pending();
+    const tabs = el.queryAll(By.css('.mdc-tab'));
 
+    click(tabs[1]); // We are using a utility function that was written beforehand for this course.
+    // another alternative is to do as the line below:
+    // tabs[1].nativeElement.click();
+
+    const cardTitles = el.queryAll(By.css('.mat-mdc-card-title'));
+    expect(cardTitles.length).toBeGreaterThan(0, 'Could not find card titles');
+    expect(cardTitles[0].nativeElement.textContent).toEqual('Angular Security Course - Web Security Fundamentals');
+    //! THIS TEST FAILS, SINCE THE DOM IS NOT UPDATED AFTER THE CLICK AND THE CARD TITLE DOESN'T MATCH! IT IS RESOLVED IN SECTION 4 OF THE COURSE.
   });
 
 });

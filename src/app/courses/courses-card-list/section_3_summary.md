@@ -112,7 +112,7 @@ One of the most important things is to know how to mock a service.
 We usually do not want to test the service while testing the component, but to test each one of them separately.
 Since there are many cases where a component depends on a service, we would need to be able to mock the service and control the data it is sending back to the component.
 
-## Example of mocking a service
+### Example of mocking a service
 
 1. We create a variable that will be used later on to server as the service we are going to mock
   - In the describe block:
