@@ -21,6 +21,9 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let component: HomeComponent;
   let el: DebugElement;
+  let coursesService: any;
+
+  const beginnerCourses = setupCourses().filter(course => course.category === 'BEGINNER'); // mock data with all the courses with the "beginner" category.
 
 
   beforeEach(waitForAsync(() => { // waitForAsync assures that each specification function runs  ONLY AFTER the beforeEach block has ended or timedout.
@@ -40,6 +43,7 @@ describe('HomeComponent', () => {
         fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
         el = fixture.debugElement;
+        coursesService = TestBed.inject(CoursesService); // using TestBed.inject to create a mock instance of the CourseService using our jasmine spy coursesServiceSpy.
       })
 
   }));
@@ -50,7 +54,13 @@ describe('HomeComponent', () => {
 
 
   it('should display only beginner courses', () => {
-    pending();
+    coursesService.findAllCourses.and.returnValue(of(beginnerCourses)); // we are using a jasmine spy so after calling a function of the service, we can use "and.returnValue()" to return mock data.
+
+    fixture.detectChanges();
+
+    const tabs = el.queryAll(By.css(".mdc-tab"));
+
+    expect(tabs.length).toBe(1, "Unexpected number of tabs found");
   });
 
 
