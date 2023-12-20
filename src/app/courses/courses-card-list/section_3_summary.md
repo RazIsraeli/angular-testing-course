@@ -1,5 +1,19 @@
 # Angular Unit Testing of Components
 
+## Basic Info about test configurations:
+
+* imports:
+  Purpose: Specifies the modules that your test component or service depends on.
+  Import types: Other Angular modules, Testing modules, custom modules.
+
+* Declarations:
+  Purpose: Lists the components or directives that you want to test within the testing module.
+  Use cases: Testing components in isolation, testing custom directives.
+
+* Providers:
+  Purpose: Provides services that your test component or service needs to function correctly.
+  Types of providers: Real services, Mock services (for isolation and controlling behavior), Spy objects (for observing interactions)
+
 ## Presentational Components
 Definition:
 
