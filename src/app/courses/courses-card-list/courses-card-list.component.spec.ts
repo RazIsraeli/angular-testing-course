@@ -35,13 +35,32 @@ describe('CoursesCardListComponent', () => {
   });
 
   it('should display the course list', () => {
-    component.courses = setupCourses(); //! After any change is done to the component's data, and we expect the DOM to display the new data - WE MUST ASK FOR CHANGE DETECTION!
+    component.courses = setupCourses();
     fixture.detectChanges();
 
     const cards = el.queryAll(By.css('.course-card'));
 
     expect(cards).toBeTruthy('No cards were found');
     expect(cards.length).toBe(12, 'Unexpected number of courses.');
+  });
+
+  it('should create the first course', () => {
+    component.courses = setupCourses();
+    fixture.detectChanges();
+
+    const course = component.courses[0];
+
+    const card = el.query(By.css('.course-card:first-child')); // Using the DebugElement to query the DOM.
+
+    const title = card.query(By.css('mat-card-title'));
+
+    const img = card.query(By.css('img'));
+
+    expect(card).toBeTruthy('Could not find course card');
+
+    expect(title.nativeElement.textContent).toBe(course.titles.description);
+
+    expect(img.nativeElement.src).toBe(course.iconUrl);
   });
 
 });
