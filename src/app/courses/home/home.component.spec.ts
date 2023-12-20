@@ -56,12 +56,13 @@ describe('HomeComponent', () => {
 
   it('should display only beginner courses', () => {
     coursesService.findAllCourses.and.returnValue(of(beginnerCourses));
-
     fixture.detectChanges();
-
     const tabs = el.queryAll(By.css('.mdc-tab'));
+    const title = tabs[0].nativeElement.textContent;
+
 
     expect(tabs.length).toBe(1, 'Unexpected number of tabs found');
+    expect(title).toBe('Beginners', 'Could not read title "Beginners"');
   });
 
 
@@ -69,15 +70,26 @@ describe('HomeComponent', () => {
     coursesService.findAllCourses.and.returnValue(of(advancedCourses));
     fixture.detectChanges();
     const tabs = el.queryAll(By.css('.mdc-tab'));
+    const title = tabs[0].nativeElement.textContent;
 
-    expect(tabs.length).toBe(1, 'Unexpected number of tabs')
+    expect(tabs.length).toBe(1, 'Unexpected number of tabs');
+    expect(title).toBe('Advanced', 'Could not read title "Advanced"');
   });
 
 
-  it("should display both tabs", () => {
+  it('should display both tabs', () => {
+    // const courses = beginnerCourses.concat(advancedCourses); //the below solution looks better:
+    const courses = setupCourses();
+    coursesService.findAllCourses.and.returnValue(of(courses));
+    fixture.detectChanges();
 
-    pending();
+    const tabs = el.queryAll(By.css('.mdc-tab'));
+    const beginnersTab = tabs.find(tab => tab.nativeElement.textContent === 'Beginners');
+    const advancedTab = tabs.find(tab => tab.nativeElement.textContent === 'Advanced');
 
+    expect(tabs.length).toBe(2,'Unexpected number of tabs found')
+    expect(beginnersTab.nativeElement.textContent).toBe('Beginners', 'Could not find beginners tab');
+    expect(advancedTab.nativeElement.textContent).toBe('Advanced', 'Could not find advanced tab');
   });
 
 
