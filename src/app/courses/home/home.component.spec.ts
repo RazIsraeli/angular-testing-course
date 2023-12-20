@@ -22,9 +22,11 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let el: DebugElement;
 
-  const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']); // replacing the service that is injected to the component with a jasmine spy.
 
   beforeEach(waitForAsync(() => { // waitForAsync assures that each specification function runs  ONLY AFTER the beforeEach block has ended or timedout.
+
+    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']); // replacing the service that is injected to the component with a jasmine spy.
+
     TestBed.configureTestingModule({
       imports: [
         CoursesModule, // containing all the components that our HomeComponent needs.
@@ -47,10 +49,8 @@ describe('HomeComponent', () => {
   });
 
 
-  it("should display only beginner courses", () => {
-
+  it('should display only beginner courses', () => {
     pending();
-
   });
 
 
