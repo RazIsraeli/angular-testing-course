@@ -89,5 +89,10 @@ DebugElement allows you to drill down into the details of the component's render
 In summary, ComponentFixture provides the overall context and control for testing a component, while DebugElement enables you to interact with and test individual elements within the rendered template. They work together to provide a comprehensive testing experience for your Angular components.
 
 ## Container Components
+* The difference between container/smart components and presentational/dumb components:
+  Container components, or smart components usually receive their data from a service.
+  Dumb components usually display the data they receive from a container component as inputs.
+
+
 
 ## Examples
