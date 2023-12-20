@@ -50,7 +50,7 @@ describe('CoursesCardListComponent', () => {
 
     const course = component.courses[0];
 
-    const card = el.query(By.css('.course-card:first-child')); // Using the DebugElement to query the DOM.
+    const card = el.query(By.css('.course-card:first-child'));
 
     const title = card.query(By.css('mat-card-title'));
 
