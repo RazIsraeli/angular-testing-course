@@ -92,22 +92,22 @@ describe('HomeComponent', () => {
   });
 
 
-  it('should display advanced courses when tab clicked', () => {
+  it('should display advanced courses when tab clicked', (done: DoneFn) => { // jasmine specific callback which is supposed to be called when the async test is complete.
     coursesService.findAllCourses.and.returnValue(of(setupCourses()));
-    fixture.detectChanges(); // At this point we have the courses loaded to the home component.
+    fixture.detectChanges();
 
     const tabs = el.queryAll(By.css('.mdc-tab'));
 
-    click(tabs[1]); // We are using a utility function that was written beforehand for this course.
-    // another alternative is to do as the line below:
-    // tabs[1].nativeElement.click();
+    click(tabs[1]);
+    fixture.detectChanges();
 
-    const cardTitles = el.queryAll(By.css('.mat-mdc-card-title'));
-    expect(cardTitles.length).toBeGreaterThan(0, 'Could not find card titles');
-    expect(cardTitles[0].nativeElement.textContent).toEqual('Angular Security Course - Web Security Fundamentals');
-    //! THIS TEST FAILS, SINCE THE DOM IS NOT UPDATED AFTER THE CLICK AND THE CARD TITLE DOESN'T MATCH! IT IS RESOLVED IN SECTION 4 OF THE COURSE.
+    setTimeout(() => {
+      const cardTitles = el.queryAll(By.css('.mat-mdc-tab-body-active .mat-mdc-card-title'));
+      expect(cardTitles.length).toBeGreaterThan(0, 'Could not find card titles');
+      expect(cardTitles[0].nativeElement.textContent).toEqual('Angular Security Course - Web Security Fundamentals');
+
+      done(); // Letting jasmine know that the test is completed and all assertions have been executed.
+    }, 500);
   });
 
 });
-
-
