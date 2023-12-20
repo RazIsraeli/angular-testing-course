@@ -23,51 +23,54 @@ describe('HomeComponent', () => {
   let el: DebugElement;
   let coursesService: any;
 
-  const beginnerCourses = setupCourses().filter(course => course.category === 'BEGINNER'); // mock data with all the courses with the "beginner" category.
+  const beginnerCourses = setupCourses().filter(course => course.category === 'BEGINNER');
+  const advancedCourses = setupCourses().filter(course => course.category === 'ADVANCED');
 
 
-  beforeEach(waitForAsync(() => { // waitForAsync assures that each specification function runs  ONLY AFTER the beforeEach block has ended or timedout.
+  beforeEach(waitForAsync(() => {
 
-    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']); // replacing the service that is injected to the component with a jasmine spy.
+    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']);
 
     TestBed.configureTestingModule({
       imports: [
-        CoursesModule, // containing all the components that our HomeComponent needs.
-        NoopAnimationsModule // no operation animation module - in our tests, we don't really need to use animations, and the animated components will still work.
+        CoursesModule,
+        NoopAnimationsModule
       ],
-      providers: [ // for services that are injected to the component we want to test.
-        { provide: CoursesService, useValue: coursesServiceSpy } // we are using a custom provider, our spy from above, to replace CoursesService.
+      providers: [
+        { provide: CoursesService, useValue: coursesServiceSpy }
       ]
     }).compileComponents()
       .then(() => {
         fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
         el = fixture.debugElement;
-        coursesService = TestBed.inject(CoursesService); // using TestBed.inject to create a mock instance of the CourseService using our jasmine spy coursesServiceSpy.
+        coursesService = TestBed.inject(CoursesService);
       })
 
   }));
 
-  it("should create the component", () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
 
   it('should display only beginner courses', () => {
-    coursesService.findAllCourses.and.returnValue(of(beginnerCourses)); // we are using a jasmine spy so after calling a function of the service, we can use "and.returnValue()" to return mock data.
+    coursesService.findAllCourses.and.returnValue(of(beginnerCourses));
 
     fixture.detectChanges();
 
-    const tabs = el.queryAll(By.css(".mdc-tab"));
+    const tabs = el.queryAll(By.css('.mdc-tab'));
 
-    expect(tabs.length).toBe(1, "Unexpected number of tabs found");
+    expect(tabs.length).toBe(1, 'Unexpected number of tabs found');
   });
 
 
-  it("should display only advanced courses", () => {
+  it('should display only advanced courses', () => {
+    coursesService.findAllCourses.and.returnValue(of(advancedCourses));
+    fixture.detectChanges();
+    const tabs = el.queryAll(By.css('.mdc-tab'));
 
-    pending();
-
+    expect(tabs.length).toBe(1, 'Unexpected number of tabs')
   });
 
 
