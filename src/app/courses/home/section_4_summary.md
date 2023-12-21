@@ -61,4 +61,31 @@ it('should display advanced courses when tab clicked', () => {
     }, 500);
   });
 
-### 
+### fakeAsync - our code runs inside Angular Zone, which keeps track and handles all async proceses.
+* fakeAsync allows us to control the passage of time throughout the test.
+  We wrap our specification with fakeAsync, and inside the specification we can use tick() to control the progress of time.
+  In this example, the code inside the setTimeout runs 1s after the specification starts, and using tick(1000) we control time and make it progress 1000ms ahead.
+  At this point in time, the assertion can be done, since the code inside the setTimeout was executed:
+it('async test example with setTimeout', fakeAsync(() =>{
+  let test = false;
+  setTimeout(() => {
+      console.log('running assertions setTimeout');
+      test = true;
+  }, 1000);
+  tick(1000);
+  expect(test).toBeTruthy();
+}));
+
+* Another option with fakeAsync is to use flush() to allow all the processes to end before doing the assertions:
+it('async test example with setTimeout', fakeAsync(() => {
+ let test = false;
+setTimeout(() => { });
+
+    setTimeout(() => {
+      console.log('running assertions setTimeout');
+
+      test = true;
+    }, 1000);
+ flush(); -> makes sure all the async processes are completed.
+expect(test).toBeTruthy();
+}));
