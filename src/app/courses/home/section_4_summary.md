@@ -61,4 +61,4 @@ it('should display advanced courses when tab clicked', () => {
     }, 500);
   });
 
-### Importing all the relevant modules and components that the component is using.
+### 
