@@ -14,7 +14,7 @@ fdescribe('async testing examples', () => {
     }, 1000);
   });
 
-  it('async test example with setTimeout', fakeAsync(() => {// fakeAsync wraps our specification with Angular Zone.js which handled all async processes.
+  it('async test example with setTimeout', fakeAsync(() => {
     let test = false;
 
     setTimeout(() => { });
@@ -25,15 +25,35 @@ fdescribe('async testing examples', () => {
       test = true;
     }, 1000);
 
-    tick(1000); // Inside fakeAsync blocks we can control the passage of time using tick() utility by angular.
-    // When taking this approach we must tick enough time forward that our timeout would end - otherwise the test would fail..
-    // tick(500) -> in this case the test would fail since the timeOut is set for 1000 ms, and we tickonly 500ms.
-    expect(test).toBeTruthy(); // We can do the assertion outside the setTimeout since we are controlling the passage of time and it will be tested only after the timeout is done.
-
-    flush(); // In case we don't want to specify the time to wait, we can use flush, which will wait for all microtasks to end.
+    flush();
     expect(test).toBeTruthy();
-    //! THERE IS NO NEED TO USE BOTH TICK() AND FLUSH()!!!
-
   }));
+
+  fit('Asynchronous test example - plain Promise', () => {
+    let test = false;
+
+    console.log('Creating Promise');
+
+    //! MicroTasks get precedence over MacroTasks (tasks) by the js runtime engine, and they will be executed first.
+    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
+      console.log('setTimeout() first callback triggered');
+    });
+
+    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
+      console.log('setTimeout() second callback triggered');
+    });
+
+    Promise.resolve().then(() => { // Added to the MicroTasks queue
+      console.log('Promise first then() evaluated succesfully');
+      return Promise.resolve();
+    }).then(() => { // Added to the MicroTasks queue
+      console.log('Promise second then() evaluated succesfully');
+      test = true;
+    })
+
+    console.log('Running test assertions');
+
+    expect(test).toBeTruthy();
+  });
 
 });

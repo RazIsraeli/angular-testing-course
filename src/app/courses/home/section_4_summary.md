@@ -89,3 +89,48 @@ setTimeout(() => { });
  flush(); -> makes sure all the async processes are completed.
 expect(test).toBeTruthy();
 }));
+
+## Promises based async code (MicroTasks and MacroTasks (or tasks))
+* Order of execution by js runtime when compared to other async operations (such as setTimeout):
+
+Promises have some kind of priority over an operation such as setTimeout.
+
+That's because Promises are considered MicroTasks, while setTimeout for example is a MacroTask.
+
+In js runtime, MicroTasks take precedence over MacroTasks.
+ it('Asynchronous test example - plain Promise', () => {
+    let test = false;
+
+    console.log('Creating Promise - executed first');
+
+    //! MicroTasks get precedence over MacroTasks (tasks) by the js runtime engine, and they will be executed first.
+    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
+      console.log('setTimeout() first callback triggered');
+    });
+
+    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
+      console.log('setTimeout() second callback triggered');
+    });
+
+    Promise.resolve().then(() => { // Added to the MicroTasks queue
+      console.log('Promise first then() evaluated succesfully');
+      return Promise.resolve();
+    }).then(() => { // Added to the MicroTasks queue
+      console.log('Promise second then() evaluated succesfully');
+      test = true;
+    })
+
+    console.log('Running test assertions');
+
+    expect(test).toBeTruthy();
+  });
+
+
+Console Output:
+
+Creating Promise
+Running test assertions
+Promise first then() evaluated succesfully
+Promise second then() evaluated succesfully
+setTimeout() first callback triggered
+setTimeout() second callback triggered
