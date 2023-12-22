@@ -29,7 +29,7 @@ fdescribe('async testing examples', () => {
     expect(test).toBeTruthy();
   }));
 
-  it('Asynchronous test example - plain Promise', fakeAsync(() => { // Adding fakeAsync to wrap our specification.
+  it('Asynchronous test example - plain Promise', fakeAsync(() => {
     let test = false;
 
     console.log('Creating Promise');
@@ -44,8 +44,28 @@ fdescribe('async testing examples', () => {
 
     console.log('Running test assertions');
 
-    flushMicrotasks(); // Flushes only the microTasks (timeouts will not be flushed) so we can be sure the async processses are completed.
+    flushMicrotasks();
     expect(test).toBeTruthy();
+  }));
+
+  it('Asynchronous test example - Promises + setTimeout', fakeAsync(() => {
+    let counter = 0;
+
+    Promise.resolve()
+      .then(() => {
+        counter += 10;
+
+        setTimeout(() => {
+          counter += 1;
+        }, 1000);
+      });
+
+    expect(counter).toBe(0);
+    flushMicrotasks(); // Only empty the MicroTasks queue, meaning, only the Promise is executed, but not the timeOut.
+    expect(counter).toBe(10);
+    tick(1000); // Passes the time so we can be sure the timeOut is also executed.
+    expect(counter).toBe(11);
+
   }));
 
 });
