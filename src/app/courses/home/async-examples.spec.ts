@@ -1,4 +1,4 @@
-import { fakeAsync, flush, tick } from '@angular/core/testing';
+import { fakeAsync, flush, flushMicrotasks, tick } from '@angular/core/testing';
 
 fdescribe('async testing examples', () => {
 
@@ -29,31 +29,23 @@ fdescribe('async testing examples', () => {
     expect(test).toBeTruthy();
   }));
 
-  fit('Asynchronous test example - plain Promise', () => {
+  it('Asynchronous test example - plain Promise', fakeAsync(() => { // Adding fakeAsync to wrap our specification.
     let test = false;
 
     console.log('Creating Promise');
 
-    //! MicroTasks get precedence over MacroTasks (tasks) by the js runtime engine, and they will be executed first.
-    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
-      console.log('setTimeout() first callback triggered');
-    });
-
-    setTimeout(() => { // Added to the Task queue (MacroTasks queue)
-      console.log('setTimeout() second callback triggered');
-    });
-
-    Promise.resolve().then(() => { // Added to the MicroTasks queue
+    Promise.resolve().then(() => {
       console.log('Promise first then() evaluated succesfully');
       return Promise.resolve();
-    }).then(() => { // Added to the MicroTasks queue
+    }).then(() => {
       console.log('Promise second then() evaluated succesfully');
       test = true;
     })
 
     console.log('Running test assertions');
 
+    flushMicrotasks(); // Flushes only the microTasks (timeouts will not be flushed) so we can be sure the async processses are completed.
     expect(test).toBeTruthy();
-  });
+  }));
 
 });

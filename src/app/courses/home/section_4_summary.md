@@ -90,7 +90,7 @@ setTimeout(() => { });
 expect(test).toBeTruthy();
 }));
 
-## Promises based async code (MicroTasks and MacroTasks (or tasks))
+### Promises based async code (MicroTasks and MacroTasks (or tasks))
 * Order of execution by js runtime when compared to other async operations (such as setTimeout):
 
 Promises have some kind of priority over an operation such as setTimeout.
@@ -134,3 +134,26 @@ Promise first then() evaluated succesfully
 Promise second then() evaluated succesfully
 setTimeout() first callback triggered
 setTimeout() second callback triggered
+
+### fakeAsync - handling Promise-based code.
+* With fakeAsync we can handle the async processes like we have seen in the previous examples.
+In this example, we are using another utility called "flushMicroTasks" that helps us advance time in a way that ensures all the microTasks were completed.
+microTasks are, for example, Promises.
+it('Asynchronous test example - plain Promise', fakeAsync(() => { // Adding fakeAsync to wrap our specification.
+    let test = false;
+
+    console.log('Creating Promise');
+
+    Promise.resolve().then(() => {
+      console.log('Promise first then() evaluated succesfully');
+      return Promise.resolve();
+    }).then(() => {
+      console.log('Promise second then() evaluated succesfully');
+      test = true;
+    })
+
+    console.log('Running test assertions');
+
+    flushMicrotasks(); // Flushes only the microTasks (timeouts will not be flushed) so we can be sure the async processses are completed.
+    expect(test).toBeTruthy();
+  }));
